@@ -36,7 +36,7 @@ removeContact = (contact) => {
   render() {
     return (
       <div>
-        <ListContacts contacts={this.state.contacts} remove={this.removeContact}/>
+        <ListContacts contacts={this.state.contacts} remove={this.removeContact} filterContact={this.filterContact}/>
       </div>
     )
   }

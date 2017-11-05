@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import escapeRegExp from 'escape-string-regexp';
+import sortBy from 'sort-by'
 
 class ListContact extends Component{
     
@@ -9,10 +11,23 @@ class ListContact extends Component{
     updateQuery = (query) => {
         this.setState({
             query: query.trim()
+        })        
+    }
+    clearQuery = () => {
+        this.setState({
+            query: ""
         })
-        
     }
     render(){
+        
+        let showingContacts; //novo array para utilizar a query
+        if (this.state.query){ //se tiver algo no input
+            const match = new RegExp(escapeRegExp(this.state.query), 'i') // cria a variavel match, 'i' tira o case sensitive
+            showingContacts = this.props.contacts.filter(contact => match.test(contact.name)) // faz um filtro no array usando a funcao test em match, que faz todo trabaho
+        }else{
+            showingContacts = this.props.contacts
+        }
+        
         return(
             <div className='list-contacts'>
                 <div className='list-contacts-top'>
@@ -24,9 +39,15 @@ class ListContact extends Component{
                         
                     </input>    
                 </div>
+                {showingContacts.length !== this.props.contacts.length && (
+                <div className="showing-contacts">
+                <span>Showing {showingContacts.length} of {this.props.contacts.length} contacts</span>
+                <button onClick={this.clearQuery}>Show All</button>
+                </div>
+                )}
                  <ol className='contact-list'>
-                {this.props.contacts.map(contact=>
-                                         <li key={contact.id} className='contact-list-item'>
+                {showingContacts.map(contact=>
+                                     <li key={contact.id} className='contact-list-item'>
                                              <div className='contact-avatar' style={{
                                                      backgroundImage: `url(${contact.avatarURL})`
                                                     }}/>
