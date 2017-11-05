@@ -1,42 +1,38 @@
 import React, { Component, PropTypes } from 'react';
-import ListContacts from './ListContacts'
+import ListContacts from './ListContacts';
+import CreateContact from './CreateContact';
+import * as ContactsApi from './utils/ContactsAPI';
 
 
 class App extends Component {
     state ={
-        contacts: [
-          {
-            "id": "ryan",
-            "name": "Ryan Florence",
-            "email": "ryan@reacttraining.com",
-            "avatarURL": "http://localhost:5001/ryan.jpg"
-          },
-          {
-            "id": "michael",
-            "name": "Michael Jackson",
-            "email": "michael@reacttraining.com",
-            "avatarURL": "http://localhost:5001/michael.jpg"
-          },
-          {
-            "id": "tyler",
-            "name": "Tyler McGinnis",
-            "email": "tyler@reacttraining.com",
-            "avatarURL": "http://localhost:5001/tyler.jpg"
-          }
-        ]
+        list: 'list', //list, create
+        contacts: []
     }
 
-                      
+    componentDidMount(){
+        ContactsApi.getAll().then((contacts) => {
+            this.setState({contacts: contacts})
+        })
+    }        
+    
+    
 removeContact = (contact) => {
     this.setState((prevState) => ({
         contacts: prevState.contacts.filter( c => c.id !== contact.id)
     }))
+    ContactsApi.remove(contact)
 }
                 
   render() {
     return (
       <div>
-        <ListContacts contacts={this.state.contacts} remove={this.removeContact} filterContact={this.filterContact}/>
+       {this.state.list === 'list' && (
+                    <ListContacts contacts={this.state.contacts} remove={this.removeContact} filterContact={this.filterContact}/>
+            )}
+      {this.state.list === 'create' && (
+                    <CreateContact />
+            )}
       </div>
     )
   }
