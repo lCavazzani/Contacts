@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import escapeRegExp from 'escape-string-regexp';
+import { Link } from 'react-router-dom';
 import sortBy from 'sort-by'
 
 class ListContact extends Component{
@@ -37,7 +38,11 @@ class ListContact extends Component{
                        value={this.state.query} 
                        onChange={(event)=> this.updateQuery(event.target.value)}>
                         
-                    </input>    
+                    </input>  
+                    <Link className='add-contact'
+                       to='/create'>
+                        Add contact
+                    </Link>  
                 </div>
                 {showingContacts.length !== this.props.contacts.length && (
                 <div className="showing-contacts">

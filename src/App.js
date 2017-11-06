@@ -2,11 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import ListContacts from './ListContacts';
 import CreateContact from './CreateContact';
 import * as ContactsApi from './utils/ContactsAPI';
+import { Route } from 'react-router-dom';
 
 
 class App extends Component {
     state ={
-        list: 'list', //list, create
         contacts: []
     }
 
@@ -23,16 +23,18 @@ removeContact = (contact) => {
     }))
     ContactsApi.remove(contact)
 }
+navigate = () => {
+    this.setState(()=>({
+    list: 'create'
+    }))
+}
                 
   render() {
     return (
       <div>
-       {this.state.list === 'list' && (
-                    <ListContacts contacts={this.state.contacts} remove={this.removeContact} filterContact={this.filterContact}/>
-            )}
-      {this.state.list === 'create' && (
-                    <CreateContact />
-            )}
+      <Route exact path='/'  render={()=>(
+                   <ListContacts contacts={this.state.contacts} remove={this.removeContact} filterContact={this.filterContact} />)}></Route>
+                   <Route path='/create' component={CreateContact}></Route>
       </div>
     )
   }
